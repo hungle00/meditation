@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/GeistVariableVF.woff2") format("woff2"),
+    url("/fonts/GeistVariableVF.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@layer base {
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  h3 {
+    @apply text-lg;
+  }
+}
+
+@layer components {
+  main {
+    @apply w-full max-w-3xl mx-auto mt-12 md:w-3/4;
+  }
+
+  h1 {
+    @apply text-4xl font-bold;
+  }
+
+  form {
+    @apply my-8;
+  }
+
+  fieldset {
+    @apply my-4;
+  }
+
+  input[type="text"],
+  textarea {
+    @apply block w-full px-3 py-2 border border-gray-200 rounded-md shadow outline-none;
+  }
+
+  label {
+    @apply font-semibold;
+  }
+
+  button,
+  .btn,
+  a.btn {
+    @apply inline-block px-5 py-3 font-medium bg-gray-100 rounded-lg no-underline hover:underline;
+  }
+
+  .btn-primary,
+  input[type="submit"] {
+    @apply inline-block px-5 py-3 font-medium text-white bg-indigo-500 rounded-lg cursor-pointer no-underline hover:underline;
+  }
+
+  #error_explanation {
+    @apply px-3 py-2 mt-3 font-medium text-red-500 rounded-lg bg-red-50;
+  }
+
+  .input {
+    @apply rounded-sm border border-zinc-300 bg-white px-3 py-2 text-sm
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+}
+
+::view-transition-new(zoom) {
+  animation: zoomIn 0.5s ease forwards;
+}
+
+::view-transition-old(zoom) {
+  animation: zoomOut 0.5s ease forwards;
+}
+
+table {
+  @apply border-collapse table-auto w-full text-base
+}
+
+table td {
+  @apply border-b border-slate-200 dark:border-slate-700 p-4 pl-8 text-slate-600 dark:text-slate-300
+}
+
+table tbody {
+  @apply bg-white dark:bg-slate-800
+}
