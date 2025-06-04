@@ -1,0 +1,16 @@
+<% Date::DAYNAMES.each do |name| %>
+  <div class="text-center p-3 text-white bg-gray-700"><%= name %></div>
+<% end %>
+
+<% @dates.each do |date| %>
+  <%= tag.div class: ["calendar-date p-2", "bg-lime-100": date.today? ] do %>
+    <span class="text-small font-bold"><%= date %></span>
+    <div class="date-events">
+      <% (events[date] || []).each do |event| %>
+        <span class="<%= color_code(event.color) %> pt-1 block">
+          <%= event.description %>
+        </span>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

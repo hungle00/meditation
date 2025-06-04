@@ -1,19 +1,23 @@
-<div class="py-2">
+<div class="mx-auto w-full max-w-6xl py-2">
   <div class="calendar-form">
     <h3 class="text-xl font-bold">Events</h3>
+    <%= render "form", calendar_event: @calendar_event %>
   </div>
 
   <div class="flex justify-between items-center mt-5">
-    <h3>June 2021</h3>
+    <h3 class="text-xl font-bold">June 2025</h3>
     <div class="block" data-toggle="buttons">
-      <%= link_to "#", class: "btn-primary" do %>
-        Prev      <% end %>
-      <%= link_to "#", class: "btn-primary" do %>
-        Next
+      <%= link_to calendar_events_path(start_date: @start_date - 1.month), class: "btn-primary" do %>
+        <i class="fas fa-chevron-left"></i>     
+      <% end %>
+      <%= link_to calendar_events_path(start_date: @start_date + 1.month), class: "btn-primary" do %>
+        <i class="fas fa-chevron-right"></i>
       <% end %>
 
       <a href="#" class="btn-primary ml-2">Today</a>
     </div>
   </div>
-
+  <div class="calendar">
+    <%= render partial: "calendar_events/calendar_grid", locals: {dates: @dates, events: @calendar_events } %>
+  </div>
 </div>

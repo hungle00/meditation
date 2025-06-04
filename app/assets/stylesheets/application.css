@@ -8,3 +8,22 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7,minmax(0,1fr));
+  font-weight: 700;
+  margin-top: .5rem;
+}
+
+.calendar-date {
+  height: 6rem;
+  border-collapse: collapse;
+  border: 1px solid var(--color-gray-500);
+}
+
+.calendar-form {
+  width: 50%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
