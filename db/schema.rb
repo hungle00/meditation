@@ -10,12 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_03_070346) do
-  create_table "calendar_events", force: :cascade do |t|
-    t.datetime "occurs_at"
-    t.text "description"
-    t.string "color"
+ActiveRecord::Schema[8.0].define(version: 2025_06_27_040337) do
+  create_table "comments", force: :cascade do |t|
+    t.integer "thread_post_id", null: false
+    t.integer "user_id", null: false
+    t.integer "parent_id"
+    t.text "content", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["parent_id"], name: "index_comments_on_parent_id"
+    t.index ["thread_post_id"], name: "index_comments_on_thread_post_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
+
+  create_table "thread_posts", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "title", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "comments_count", default: 0, null: false
+    t.index ["user_id"], name: "index_thread_posts_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "email", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+  end
+
+  add_foreign_key "comments", "comments", column: "parent_id"
+  add_foreign_key "comments", "thread_posts"
+  add_foreign_key "comments", "users"
+  add_foreign_key "thread_posts", "users"
 end

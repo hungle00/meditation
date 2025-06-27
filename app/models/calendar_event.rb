@@ -1,2 +1,0 @@
-class CalendarEvent < ApplicationRecord
-end

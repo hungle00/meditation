@@ -1,24 +1,15 @@
-# README
+## Meta's Thread-like Feature
+This project is Meta's Thread-like application, generate by Cursor AI, 
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Models and Relationships
 
-Things you may want to cover:
+- **User**: Has many threads (ThreadPost)
+- **ThreadPost**: Belongs to a user, has many comments
+- **Comment**: Belongs to a thread_post and a user, can have many subcomments (self-referential association)
 
-* Ruby version
+### Database Tables
+- `users`: name, email
+- `thread_posts`: user_id, title, content
+- `comments`: thread_post_id, user_id, parent_id, content
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+See the migrations in `db/migrate` for details.
