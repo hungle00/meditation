@@ -1,0 +1,149 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/thread_posts/{thread_post_id}/comments":
+    parameters:
+    - name: thread_post_id
+      in: path
+      description: ThreadPost ID
+      required: true
+      schema:
+        type: string
+    get:
+      summary: list comments
+      tags:
+      - Comments
+      responses:
+        '200':
+          description: successful
+    post:
+      summary: create comment
+      tags:
+      - Comments
+      parameters: []
+      responses:
+        '201':
+          description: created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                content:
+                  type: string
+                parent_id:
+                  type: integer
+                  nullable: true
+              required:
+              - user_id
+              - content
+  "/thread_posts/{thread_post_id}/comments/{id}":
+    parameters:
+    - name: thread_post_id
+      in: path
+      description: ThreadPost ID
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      description: Comment ID
+      required: true
+      schema:
+        type: string
+    delete:
+      summary: delete comment
+      tags:
+      - Comments
+      responses:
+        '204':
+          description: no content
+  "/thread_posts":
+    get:
+      summary: list thread_posts
+      tags:
+      - ThreadPosts
+      responses:
+        '200':
+          description: successful
+    post:
+      summary: create thread_post
+      tags:
+      - ThreadPosts
+      parameters: []
+      responses:
+        '201':
+          description: created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                title:
+                  type: string
+                content:
+                  type: string
+              required:
+              - user_id
+              - title
+              - content
+  "/thread_posts/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show thread_post
+      tags:
+      - ThreadPosts
+      responses:
+        '200':
+          description: successful
+    put:
+      summary: update thread_post
+      tags:
+      - ThreadPosts
+      parameters: []
+      responses:
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                title:
+                  type: string
+                content:
+                  type: string
+              required:
+              - user_id
+              - title
+              - content
+    delete:
+      summary: delete thread_post
+      tags:
+      - ThreadPosts
+      responses:
+        '204':
+          description: no content
+servers:
+- url: http://localhost:3000
+  variables:
+    defaultHost:
+      default: localhost:3000

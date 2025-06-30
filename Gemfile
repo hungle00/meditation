@@ -28,6 +28,9 @@ gem "solid_cache"
 gem "solid_queue"
 gem "solid_cable"
 
+gem "rswag-api"
+gem "rswag-ui"
+
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
@@ -51,6 +54,8 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "faker"
+  gem "rspec-rails"
+  gem "rswag-specs"
 end
 
 group :development do
