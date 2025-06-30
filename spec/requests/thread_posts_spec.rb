@@ -5,7 +5,6 @@ RSpec.describe 'ThreadPosts API', type: :request do
     get('list thread_posts') do
       tags 'ThreadPosts'
       produces 'application/json'
-
       response(200, 'successful') do
         run_test!
       end
@@ -14,6 +13,7 @@ RSpec.describe 'ThreadPosts API', type: :request do
     post('create thread_post') do
       tags 'ThreadPosts'
       consumes 'application/json'
+      security [ bearerAuth: [] ]
       parameter name: :thread_post, in: :body, schema: {
         type: :object,
         properties: {
@@ -23,7 +23,6 @@ RSpec.describe 'ThreadPosts API', type: :request do
         },
         required: [ 'user_id', 'title', 'content' ]
       }
-
       response(201, 'created') do
         let(:thread_post) { { user_id: 1, title: 'Sample', content: 'Sample content' } }
         run_test!
@@ -46,6 +45,7 @@ RSpec.describe 'ThreadPosts API', type: :request do
     put('update thread_post') do
       tags 'ThreadPosts'
       consumes 'application/json'
+      security [ bearerAuth: [] ]
       parameter name: :thread_post, in: :body, schema: {
         type: :object,
         properties: {
@@ -64,6 +64,7 @@ RSpec.describe 'ThreadPosts API', type: :request do
 
     delete('delete thread_post') do
       tags 'ThreadPosts'
+      security [ bearerAuth: [] ]
       response(204, 'no content') do
         let(:id) { '1' }
         run_test!

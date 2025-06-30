@@ -16,6 +16,7 @@ RSpec.describe 'Comments API', type: :request do
     post('create comment') do
       tags 'Comments'
       consumes 'application/json'
+      security [ bearerAuth: [] ]
       parameter name: :comment, in: :body, schema: {
         type: :object,
         properties: {
@@ -39,6 +40,7 @@ RSpec.describe 'Comments API', type: :request do
 
     delete('delete comment') do
       tags 'Comments'
+      security [ bearerAuth: [] ]
       response(204, 'no content') do
         let(:thread_post_id) { '1' }
         let(:id) { '1' }

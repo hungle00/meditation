@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+  before_action :authenticate_request!, except: [ :index ]
   skip_before_action :verify_authenticity_token
   before_action :set_thread_post
   before_action :set_comment, only: [ :destroy ]

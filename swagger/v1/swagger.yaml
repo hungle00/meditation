@@ -4,6 +4,57 @@ info:
   title: API V1
   version: v1
 paths:
+  "/register":
+    post:
+      summary: register user
+      tags:
+      - Auth
+      parameters: []
+      responses:
+        '201':
+          description: created
+        '422':
+          description: unprocessable entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+              required:
+              - name
+              - email
+              - password
+              - password_confirmation
+  "/login":
+    post:
+      summary: login user
+      tags:
+      - Auth
+      parameters:
+      - name: email
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: password
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ok
+        '401':
+          description: unauthorized
   "/thread_posts/{thread_post_id}/comments":
     parameters:
     - name: thread_post_id
@@ -23,6 +74,8 @@ paths:
       summary: create comment
       tags:
       - Comments
+      security:
+      - bearerAuth: []
       parameters: []
       responses:
         '201':
@@ -61,6 +114,8 @@ paths:
       summary: delete comment
       tags:
       - Comments
+      security:
+      - bearerAuth: []
       responses:
         '204':
           description: no content
@@ -76,6 +131,8 @@ paths:
       summary: create thread_post
       tags:
       - ThreadPosts
+      security:
+      - bearerAuth: []
       parameters: []
       responses:
         '201':
@@ -115,6 +172,8 @@ paths:
       summary: update thread_post
       tags:
       - ThreadPosts
+      security:
+      - bearerAuth: []
       parameters: []
       responses:
         '200':
@@ -139,6 +198,8 @@ paths:
       summary: delete thread_post
       tags:
       - ThreadPosts
+      security:
+      - bearerAuth: []
       responses:
         '204':
           description: no content
@@ -147,3 +208,9 @@ servers:
   variables:
     defaultHost:
       default: localhost:3000
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

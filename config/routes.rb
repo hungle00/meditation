@@ -16,4 +16,6 @@ Rails.application.routes.draw do
   end
   # Defines the root path route ("/")
   root "calendar_events#index"
+  post "register", to: "auth#register"
+  post "login", to: "auth#login"
 end

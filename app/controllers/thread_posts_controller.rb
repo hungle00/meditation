@@ -1,4 +1,5 @@
 class ThreadPostsController < ApplicationController
+  before_action :authenticate_request!, except: [ :index, :show ]
   before_action :set_thread_post, only: [ :show, :update, :destroy ]
   skip_before_action :verify_authenticity_token
 
