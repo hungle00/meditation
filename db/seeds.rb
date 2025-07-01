@@ -44,3 +44,9 @@ end
 ThreadPost.find_each do |thread|
   ThreadPost.reset_counters(thread.id, :comments)
 end
+
+comment_ids = Comment.pluck(:id)
+5.times do
+  Vote.create!(voter_id: user_ids.sample, votable: ThreadPost.find(thread_ids.sample))
+  Vote.create!(voter_id: user_ids.sample, votable: Comment.find(comment_ids.sample))
+end
