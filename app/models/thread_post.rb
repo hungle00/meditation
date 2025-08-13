@@ -3,6 +3,9 @@ class ThreadPost < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :votes, as: :votable, dependent: :destroy
 
+  validates :title, presence: true
+  validates :content, presence: true
+
   scope :thread_with_comments, -> { joins(:comments).where.not(comments: { id: nil }) }
   has_many :sorted_comments, -> { order(id: :desc) }, class_name: "Comment"
 
@@ -12,7 +15,7 @@ class ThreadPost < ApplicationRecord
       thread_with_comments.includes(:comments).find_each do |thread|
         comments_by_thread[thread.id] = {
           number_of_comments: thread.comments_count,
-          comment_ids: [ thread.comments.pluck(:id) ]
+          comment_ids: thread.comments.pluck(:id)
         }
       end
       comments_by_thread
@@ -26,7 +29,6 @@ class ThreadPost < ApplicationRecord
       result
     end
 
-
     def most_popular_comments_per_thread
       comments = Comment
         .select("comments.*, COUNT(votes.id) as votes_count")
@@ -35,7 +37,7 @@ class ThreadPost < ApplicationRecord
         .order("comments.thread_post_id, votes_count DESC")
 
       # Group by thread_post_id and pick top 3 for each
-      comments.group_by(&:thread_post_id).transform_values { |arr| arr.first }
+      comments.group_by(&:thread_post_id).transform_values { |arr| arr.first(3) }
     end
   end
 end
