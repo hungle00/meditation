@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_01_015540) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_15_014122) do
   create_table "comments", force: :cascade do |t|
     t.integer "thread_post_id", null: false
     t.integer "user_id", null: false
@@ -21,6 +21,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_01_015540) do
     t.index ["parent_id"], name: "index_comments_on_parent_id"
     t.index ["thread_post_id"], name: "index_comments_on_thread_post_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "saved", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "savable_type", null: false
+    t.integer "savable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["savable_type", "savable_id"], name: "index_saved_on_savable"
+    t.index ["user_id"], name: "index_saved_on_user_id"
   end
 
   create_table "thread_posts", force: :cascade do |t|
@@ -55,6 +65,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_01_015540) do
   add_foreign_key "comments", "comments", column: "parent_id"
   add_foreign_key "comments", "thread_posts"
   add_foreign_key "comments", "users"
+  add_foreign_key "saved", "users"
   add_foreign_key "thread_posts", "users"
   add_foreign_key "votes", "users", column: "voter_id"
 end

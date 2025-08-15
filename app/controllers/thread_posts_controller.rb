@@ -1,11 +1,12 @@
 class ThreadPostsController < ApplicationController
-  before_action :authenticate_request!, except: [ :index, :show ]
+  before_action :authenticate_request!, except: [ :show ]
   before_action :set_thread_post, only: [ :show, :update, :destroy ]
+  before_action :authorize_user!, only: [ :update, :destroy ]
   skip_before_action :verify_authenticity_token
 
   # GET /thread_posts
   def index
-    @thread_posts = ThreadPost.all
+    @thread_posts = current_user.threads.all
     render json: @thread_posts
   end
 
@@ -16,7 +17,8 @@ class ThreadPostsController < ApplicationController
 
   # POST /thread_posts
   def create
-    @thread_post = ThreadPost.new(thread_post_params)
+    @thread_post = current_user.threads.build(thread_post_params)
+
     if @thread_post.save
       render json: @thread_post, status: :created
     else
@@ -44,7 +46,13 @@ class ThreadPostsController < ApplicationController
       @thread_post = ThreadPost.find(params[:id])
     end
 
+    def authorize_user!
+      unless @thread_post.user_id == current_user.id
+        render json: { error: "You are not authorized to perform this action" }, status: :forbidden
+      end
+    end
+
     def thread_post_params
-      params.require(:thread_post).permit(:user_id, :title, :content)
+      params.require(:thread_post).permit(:title, :content)
     end
 end

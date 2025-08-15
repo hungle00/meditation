@@ -21,19 +21,22 @@ paths:
             schema:
               type: object
               properties:
-                name:
-                  type: string
-                email:
-                  type: string
-                password:
-                  type: string
-                password_confirmation:
-                  type: string
-              required:
-              - name
-              - email
-              - password
-              - password_confirmation
+                user:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    email:
+                      type: string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+                  required:
+                  - name
+                  - email
+                  - password
+                  - password_confirmation
   "/login":
     post:
       summary: login user
@@ -119,14 +122,78 @@ paths:
       responses:
         '204':
           description: no content
+  "/home":
+    get:
+      summary: List all thread posts
+      tags:
+      - Home
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Page number
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        description: Items per page
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: thread posts retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  thread_posts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        title:
+                          type: string
+                        content:
+                          type: string
+                        user_id:
+                          type: integer
+                        created_at:
+                          type: string
+                          format: date-time
+                        updated_at:
+                          type: string
+                          format: date-time
+                        comments_count:
+                          type: integer
+                        user:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                  current_page:
+                    type: integer
+                  total_pages:
+                    type: integer
+                  total_count:
+                    type: integer
   "/thread_posts":
     get:
       summary: list thread_posts
       tags:
       - ThreadPosts
+      security:
+      - bearerAuth: []
       responses:
         '200':
           description: successful
+        '401':
+          description: unauthorized
     post:
       summary: create thread_post
       tags:
@@ -137,20 +204,19 @@ paths:
       responses:
         '201':
           description: created
+        '401':
+          description: unauthorized
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                user_id:
-                  type: integer
                 title:
                   type: string
                 content:
                   type: string
               required:
-              - user_id
               - title
               - content
   "/thread_posts/{id}":
@@ -178,20 +244,21 @@ paths:
       responses:
         '200':
           description: successful
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                user_id:
-                  type: integer
                 title:
                   type: string
                 content:
                   type: string
               required:
-              - user_id
               - title
               - content
     delete:
@@ -203,6 +270,10 @@ paths:
       responses:
         '204':
           description: no content
+        '401':
+          description: unauthorized
+        '403':
+          description: forbidden
 servers:
 - url: http://localhost:3000
   variables:

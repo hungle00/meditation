@@ -10,12 +10,20 @@ Rails.application.routes.draw do
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+
+  # Home routes
+  get "home", to: "home#index"
+
+  # API routes
   resources :calendar_events
   resources :thread_posts do
     resources :comments, only: [ :index, :create, :destroy ]
   end
-  # Defines the root path route ("/")
-  root "calendar_events#index"
+
+  # Auth routes
   post "register", to: "auth#register"
   post "login", to: "auth#login"
+
+  # Defines the root path route ("/")
+  root "calendar_events#index"
 end
