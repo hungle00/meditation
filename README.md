@@ -8,11 +8,13 @@ This project is Meta's Thread-like application, generate by Cursor AI.
 - **JWT**: Authentication for protected endpoints
 - **Bcrypt**: Secure password hashing
 
-### Models and Relationships
+### Features
+- **User Authentication**: Registration and login with JWT tokens
+- **Thread Posts**: Create, read, update, delete thread posts
+- **Comments**: Nested comments with reply functionality
+- **Voting System**: Upvote threads and comments (polymorphic)
+- **API Documentation**: Interactive Swagger UI at `/api-docs`
+- **Pagination**: Thread listing with Kaminari pagination
+- **Rate Limiting**: Custom middleware for API protection
+- **Testing**: Comprehensive RSpec tests with factories
 
-- **User**: Has many threads (ThreadPost), has many comments, has many votes
-- **ThreadPost**: Belongs to a user, has many comments, has many votes (as votable, polymorphic)
-- **Comment**: Belongs to a thread_post and a user, can have many subcomments (self-referential association), has many votes (as votable, polymorphic)
-- **Vote**: Belongs to a user, belongs to a votable (polymorphic: ThreadPost or Comment)
-
-See the migrations in `db/migrate` for details.
