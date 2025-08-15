@@ -1,6 +1,10 @@
 require 'swagger_helper'
 
 RSpec.describe 'Comments API', type: :request do
+  let(:user) { create(:user) }
+  let(:thread_post) { create(:thread_post, user: user) }
+  let(:jwt_token) { JWT.encode({ user_id: user.id }, Rails.application.credentials.secret_key_base) }
+
   path '/thread_posts/{thread_post_id}/comments' do
     parameter name: :thread_post_id, in: :path, type: :string, description: 'ThreadPost ID'
 
@@ -8,7 +12,7 @@ RSpec.describe 'Comments API', type: :request do
       tags 'Comments'
       produces 'application/json'
       response(200, 'successful') do
-        let(:thread_post_id) { '1' }
+        let(:thread_post_id) { thread_post.id }
         run_test!
       end
     end
@@ -27,8 +31,9 @@ RSpec.describe 'Comments API', type: :request do
         required: [ 'user_id', 'content' ]
       }
       response(201, 'created') do
-        let(:thread_post_id) { '1' }
-        let(:comment) { { user_id: 1, content: 'Sample comment' } }
+        let(:Authorization) { "Bearer #{jwt_token}" }
+        let(:thread_post_id) { thread_post.id }
+        let(:comment) { { user_id: user.id, content: 'Sample comment' } }
         run_test!
       end
     end
@@ -42,8 +47,9 @@ RSpec.describe 'Comments API', type: :request do
       tags 'Comments'
       security [ bearerAuth: [] ]
       response(204, 'no content') do
-        let(:thread_post_id) { '1' }
-        let(:id) { '1' }
+        let(:Authorization) { "Bearer #{jwt_token}" }
+        let(:thread_post_id) { thread_post.id }
+        let(:id) { create(:comment, thread_post: thread_post, user: user).id }
         run_test!
       end
     end

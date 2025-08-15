@@ -8,19 +8,24 @@ RSpec.describe 'Auth API', type: :request do
       parameter name: :user, in: :body, schema: {
         type: :object,
         properties: {
-          name: { type: :string },
-          email: { type: :string },
-          password: { type: :string },
-          password_confirmation: { type: :string }
-        },
-        required: [ 'name', 'email', 'password', 'password_confirmation' ]
+          user: {
+            type: :object,
+            properties: {
+              name: { type: :string },
+              email: { type: :string },
+              password: { type: :string },
+              password_confirmation: { type: :string }
+            },
+            required: [ 'name', 'email', 'password', 'password_confirmation' ]
+          }
+        }
       }
       response(201, 'created') do
-        let(:user) { { name: 'Test', email: 'test@example.com', password: 'password', password_confirmation: 'password' } }
+        let(:user) { { user: { name: 'Test', email: 'test@example.com', password: 'password', password_confirmation: 'password' } } }
         run_test!
       end
       response(422, 'unprocessable entity') do
-        let(:user) { { name: '', email: '', password: '', password_confirmation: '' } }
+        let(:user) { { user: { name: '', email: '', password: '', password_confirmation: '' } } }
         run_test!
       end
     end
@@ -35,6 +40,12 @@ RSpec.describe 'Auth API', type: :request do
       response(200, 'ok') do
         let(:email) { 'test@example.com' }
         let(:password) { 'password' }
+
+        before do
+          # Create the user first
+          User.create!(name: 'Test User', email: 'test@example.com', password: 'password', password_confirmation: 'password')
+        end
+
         run_test!
       end
       response(401, 'unauthorized') do

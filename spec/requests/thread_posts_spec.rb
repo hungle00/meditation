@@ -1,6 +1,9 @@
 require 'swagger_helper'
 
 RSpec.describe 'ThreadPosts API', type: :request do
+  let(:user) { create(:user) }
+  let(:jwt_token) { JWT.encode({ user_id: user.id }, Rails.application.credentials.secret_key_base) }
+
   path '/thread_posts' do
     get('list thread_posts') do
       tags 'ThreadPosts'
@@ -24,7 +27,8 @@ RSpec.describe 'ThreadPosts API', type: :request do
         required: [ 'user_id', 'title', 'content' ]
       }
       response(201, 'created') do
-        let(:thread_post) { { user_id: 1, title: 'Sample', content: 'Sample content' } }
+        let(:Authorization) { "Bearer #{jwt_token}" }
+        let(:thread_post) { { user_id: user.id, title: 'Sample', content: 'Sample content' } }
         run_test!
       end
     end
@@ -37,7 +41,7 @@ RSpec.describe 'ThreadPosts API', type: :request do
       tags 'ThreadPosts'
       produces 'application/json'
       response(200, 'successful') do
-        let(:id) { '1' }
+        let(:id) { create(:thread_post, user: user).id }
         run_test!
       end
     end
@@ -56,8 +60,9 @@ RSpec.describe 'ThreadPosts API', type: :request do
         required: [ 'user_id', 'title', 'content' ]
       }
       response(200, 'successful') do
-        let(:id) { '1' }
-        let(:thread_post) { { user_id: 1, title: 'Updated', content: 'Updated content' } }
+        let(:Authorization) { "Bearer #{jwt_token}" }
+        let(:id) { create(:thread_post, user: user).id }
+        let(:thread_post) { { user_id: user.id, title: 'Updated', content: 'Updated content' } }
         run_test!
       end
     end
@@ -66,7 +71,8 @@ RSpec.describe 'ThreadPosts API', type: :request do
       tags 'ThreadPosts'
       security [ bearerAuth: [] ]
       response(204, 'no content') do
-        let(:id) { '1' }
+        let(:Authorization) { "Bearer #{jwt_token}" }
+        let(:id) { create(:thread_post, user: user).id }
         run_test!
       end
     end
