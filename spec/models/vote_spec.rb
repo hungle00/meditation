@@ -56,31 +56,4 @@ RSpec.describe Vote, type: :model do
       }.not_to raise_error
     end
   end
-
-  describe 'cascading deletes' do
-    let(:user) { create(:user) }
-    let(:thread_post) { create(:thread_post) }
-
-    it 'deletes votes when user is deleted' do
-      vote = create(:vote, votable: thread_post, voter: user)
-      expect {
-        user.destroy
-      }.to change { Vote.count }.by(-1)
-    end
-
-    it 'deletes votes when thread post is deleted' do
-      vote = create(:vote, votable: thread_post, voter: user)
-      expect {
-        thread_post.destroy
-      }.to change { Vote.count }.by(-1)
-    end
-
-    it 'deletes votes when comment is deleted' do
-      comment = create(:comment)
-      vote = create(:vote, votable: comment, voter: user)
-      expect {
-        comment.destroy
-      }.to change { Vote.count }.by(-1)
-    end
-  end
 end

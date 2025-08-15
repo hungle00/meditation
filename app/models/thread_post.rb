@@ -1,7 +1,8 @@
 class ThreadPost < ApplicationRecord
   belongs_to :user
-  has_many :comments, dependent: :destroy
+  has_many :comments, dependent: :destroy, counter_cache: true
   has_many :votes, as: :votable, dependent: :destroy
+  has_many :saveds, as: :savable, dependent: :destroy
 
   validates :title, presence: true
   validates :content, presence: true

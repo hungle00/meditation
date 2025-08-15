@@ -8,7 +8,13 @@ RSpec.describe 'ThreadPosts API', type: :request do
     get('list thread_posts') do
       tags 'ThreadPosts'
       produces 'application/json'
+      security [ bearerAuth: [] ]
       response(200, 'successful') do
+        let(:Authorization) { "Bearer #{jwt_token}" }
+        run_test!
+      end
+      response(401, 'unauthorized') do
+        let(:Authorization) { nil }
         run_test!
       end
     end
@@ -20,15 +26,19 @@ RSpec.describe 'ThreadPosts API', type: :request do
       parameter name: :thread_post, in: :body, schema: {
         type: :object,
         properties: {
-          user_id: { type: :integer },
           title: { type: :string },
           content: { type: :string }
         },
-        required: [ 'user_id', 'title', 'content' ]
+        required: [ 'title', 'content' ]
       }
       response(201, 'created') do
         let(:Authorization) { "Bearer #{jwt_token}" }
-        let(:thread_post) { { user_id: user.id, title: 'Sample', content: 'Sample content' } }
+        let(:thread_post) { { title: 'Sample', content: 'Sample content' } }
+        run_test!
+      end
+      response(401, 'unauthorized') do
+        let(:Authorization) { nil }
+        let(:thread_post) { { title: 'Sample', content: 'Sample content' } }
         run_test!
       end
     end
@@ -53,16 +63,29 @@ RSpec.describe 'ThreadPosts API', type: :request do
       parameter name: :thread_post, in: :body, schema: {
         type: :object,
         properties: {
-          user_id: { type: :integer },
           title: { type: :string },
           content: { type: :string }
         },
-        required: [ 'user_id', 'title', 'content' ]
+        required: [ 'title', 'content' ]
       }
       response(200, 'successful') do
         let(:Authorization) { "Bearer #{jwt_token}" }
         let(:id) { create(:thread_post, user: user).id }
-        let(:thread_post) { { user_id: user.id, title: 'Updated', content: 'Updated content' } }
+        let(:thread_post) { { title: 'Updated', content: 'Updated content' } }
+        run_test!
+      end
+      response(401, 'unauthorized') do
+        let(:Authorization) { nil }
+        let(:id) { create(:thread_post, user: user).id }
+        let(:thread_post) { { title: 'Updated', content: 'Updated content' } }
+        run_test!
+      end
+      response(403, 'forbidden') do
+        let(:other_user) { create(:user) }
+        let(:other_jwt_token) { JWT.encode({ user_id: other_user.id }, Rails.application.credentials.secret_key_base) }
+        let(:Authorization) { "Bearer #{other_jwt_token}" }
+        let(:id) { create(:thread_post, user: user).id }
+        let(:thread_post) { { title: 'Updated', content: 'Updated content' } }
         run_test!
       end
     end
@@ -72,6 +95,18 @@ RSpec.describe 'ThreadPosts API', type: :request do
       security [ bearerAuth: [] ]
       response(204, 'no content') do
         let(:Authorization) { "Bearer #{jwt_token}" }
+        let(:id) { create(:thread_post, user: user).id }
+        run_test!
+      end
+      response(401, 'unauthorized') do
+        let(:Authorization) { nil }
+        let(:id) { create(:thread_post, user: user).id }
+        run_test!
+      end
+      response(403, 'forbidden') do
+        let(:other_user) { create(:user) }
+        let(:other_jwt_token) { JWT.encode({ user_id: other_user.id }, Rails.application.credentials.secret_key_base) }
+        let(:Authorization) { "Bearer #{other_jwt_token}" }
         let(:id) { create(:thread_post, user: user).id }
         run_test!
       end
